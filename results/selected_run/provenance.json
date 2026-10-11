@@ -1,0 +1,36 @@
+{
+  "dataset_sha256": "7d118fef8b6ccf7f81111877bc388536f7b1e498a655e3d649d19aaa010e9f6f",
+  "source_sha256": {
+    "train.py": "5ac7ca24d30630ed9da1454a9c79e8653b2af94104c9d2157704557423644351",
+    "preprocessing.py": "60590e7faa69feeda9da2e11a82184f0c00cce08676305449d16fe1dc063e3b5",
+    "requirements.txt": "76fbf41e00d1feca2cac8ec107cb530b7efc55a160c2a502eaa63e78aaa0eb21"
+  },
+  "git_commit": "f05df9f1db723e008fc49c2d934991ad6e6a7438",
+  "git_dirty": false,
+  "python": "3.14.7",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "dependencies": {
+    "mlflow": "3.17.0",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2",
+    "skops": "0.16.0",
+    "scipy": "1.18.1"
+  },
+  "run_id": "b8cb39f305004bf1a1df0c6a5b8fed1f",
+  "run_name": "05_balanced",
+  "model_uri": "models:/m-57497d929cca447a9ded3d4923480d33",
+  "params": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "solver": "lbfgs",
+    "max_iter": 1000,
+    "seed": 42,
+    "test_size": 0.2,
+    "fare_cap_quantile": 0.99,
+    "model": "LogisticRegression",
+    "regularization": "L2",
+    "decision_threshold": 0.5
+  }
+}

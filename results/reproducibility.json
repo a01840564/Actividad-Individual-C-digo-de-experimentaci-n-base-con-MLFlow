@@ -1,0 +1,23 @@
+{
+  "baseline_run_id": "096fcc4e20ff4a8cad5f41e06e41fdef",
+  "replica_run_id": "43ec596ff94a4886a854f61a3306be25",
+  "exact_metrics_match": true,
+  "exact_predictions_csv_match": true,
+  "exact_split_match": true,
+  "model_reload_predictions_match": true,
+  "fare_cap_fit_on_train_only": true,
+  "baseline_metrics": {
+    "accuracy_test": 0.8044692737430168,
+    "f1_test": 0.7244094488188977,
+    "roc_auc_test": 0.8430830039525692,
+    "precision_test": 0.7931034482758621,
+    "recall_test": 0.6666666666666666
+  },
+  "replica_metrics": {
+    "accuracy_test": 0.8044692737430168,
+    "f1_test": 0.7244094488188977,
+    "roc_auc_test": 0.8430830039525692,
+    "precision_test": 0.7931034482758621,
+    "recall_test": 0.6666666666666666
+  }
+}

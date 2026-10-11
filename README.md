@@ -71,6 +71,11 @@ El ejecutor verifica igualdad exacta de las cinco métricas, predicciones y
 partición entre base y réplica; recarga el modelo guardado y compara predicciones;
 verifica que el recorte de Fare se aprendió solo con entrenamiento.
 
+En la entrega preparada se seleccionó `C=1`, `class_weight=balanced`,
+`solver=lbfgs`: F1 **0.7552**, accuracy **0.8045**, ROC-AUC **0.8462**. Entre los
+rangos probados, `C` produjo el mayor cambio de F1. El análisis completo y sus
+limitaciones están en `results/analysis.md` y en el PDF.
+
 ## Reproducibilidad y metodología
 
 La semilla fija `random`, NumPy, la partición estratificada y el clasificador.
@@ -92,6 +97,7 @@ afirmaciones de generalización.
 - `results/commands.txt`: comandos exactos ejecutados.
 - `results/experiment_summary.json`: IDs, selección y versión del modelo.
 - `results/reproducibility.json`: evidencia de reproducibilidad y recarga.
+- `results/default_execution_verified.json`: ejecución real sin argumentos.
 - `results/selected_run/`: evaluación, gráficas y procedencia del ganador.
 - `evidence/`: capturas reales de la interfaz de MLflow.
 - `output/pdf/`: documento para Canvas.
@@ -128,6 +134,8 @@ git push
 
 El PDF sin `--repo-url` indica explícitamente que falta el enlace y debe
 regenerarse antes de entregar. Ningún enlace se inventa.
+El generador usa Arial de macOS; en otro sistema, indica `--font-dir` con una
+carpeta que contenga `Arial.ttf` y `Arial Bold.ttf`.
 
 Referencias técnicas: [MLflow sklearn](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.sklearn.html)
 y [LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html).

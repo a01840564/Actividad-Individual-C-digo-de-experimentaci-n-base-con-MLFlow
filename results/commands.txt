@@ -1,0 +1,7 @@
+python train.py --C 1.0 --class-weight none --solver lbfgs --seed 42 --run-name 01_baseline
+python train.py --C 0.01 --class-weight none --solver lbfgs --seed 42 --run-name 02_C_0.01
+python train.py --C 0.1 --class-weight none --solver lbfgs --seed 42 --run-name 03_C_0.1
+python train.py --C 10.0 --class-weight none --solver lbfgs --seed 42 --run-name 04_C_10
+python train.py --C 1.0 --class-weight balanced --solver lbfgs --seed 42 --run-name 05_balanced
+python train.py --C 1.0 --class-weight none --solver liblinear --seed 42 --run-name 06_liblinear
+python train.py --C 1.0 --class-weight none --solver lbfgs --seed 42 --run-name 07_baseline_replica

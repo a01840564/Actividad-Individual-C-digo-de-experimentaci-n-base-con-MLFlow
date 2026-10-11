@@ -1,0 +1,7 @@
+{
+  "command": "python train.py",
+  "exit_code": 0,
+  "metrics_match_baseline": true,
+  "run_id": "945aae101cca4759805bc8f84e8f9a6d",
+  "lifecycle_stage": "deleted (smoke test excluded from comparison)"
+}
