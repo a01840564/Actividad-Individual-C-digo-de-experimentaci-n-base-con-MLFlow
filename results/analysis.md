@@ -1,9 +1,23 @@
 # Análisis de resultados
 
-Se migró el baseline Titanic del notebook a un script parametrizado de regresión logística. Se evaluaron seis configuraciones y una réplica bajo el mismo experimento, con 891 pasajeros, siete variables predictoras y una división estratificada 80/20 (712 para entrenamiento y 179 para evaluación). Se fijó la semilla 42 y el umbral de clasificación 0.5. La comparación de MLflow permitió contrastar los parámetros y métricas de todas las corridas.
+En esta actividad pasé el modelo de Titanic del notebook a un archivo de Python. Así puedo cambiar sus parámetros desde la terminal y guardar los resultados en MLflow. Conservé la regresión logística del trabajo anterior. Probé seis configuraciones y repetí la base para revisar que diera el mismo resultado.
 
-Se eligió F1 de la clase sobreviviente como criterio antes de comparar, por el desequilibrio de clases (549 no sobrevivientes y 342 sobrevivientes). La mejor configuración fue C=1, class_weight=balanced, solver=lbfgs y max_iter=1000: F1=0.7552, accuracy=0.8045 y ROC-AUC=0.8462. Frente a la base (F1=0.7244), el recall subió de 0.6667 a 0.7826, mientras la precision bajó de 0.7931 a 0.7297. El ganador recuperó 54 de los 69 sobrevivientes, con 20 falsos positivos y 15 falsos negativos. C=10 obtuvo la mayor accuracy (0.8101) y C=0.1 el mayor ROC-AUC (0.8469); la selección depende de la métrica priorizada.
+**Datos utilizados:**  
+Total de pasajeros: 891  
+Para entrenar: 712  
+Para evaluar: 179
 
-C fue el hiperparámetro más influyente dentro de los valores probados: su variación entre 0.01, 0.1, 1 y 10 cambió F1 de 0.6286 a 0.7344 (rango 0.1058). C=0.01, con regularización más fuerte, redujo el recall a 0.4783. El balanceo de clases mejoró F1 en 0.0308 respecto a la base; cambiar a liblinear no cambió F1 ni accuracy. Se modificó un hiperparámetro a la vez, por lo que no se evaluaron sus interacciones ni puede extrapolarse esta influencia a otros rangos.
+Elegí el modelo con el mejor F1 porque me interesaba identificar bien a los sobrevivientes. No me basé solo en el porcentaje de aciertos, ya que en los datos hay más personas que no sobrevivieron.
 
-La réplica produjo métricas, predicciones y partición idénticas. Se corrigió la filtración del notebook: el percentil 99 de Fare se aprende solo con entrenamiento, junto con la imputación, escalado y codificación. Se registraron el pipeline completo, dependencias, huella del dataset y commit del código; el ganador quedó en Model Registry, versión 1, alias candidate. Las principales limitaciones son el dataset pequeño, una única partición y el uso de esa misma evaluación para seleccionar y reportar el ganador. Las métricas no estiman de forma independiente su generalización. El siguiente paso sería validar con particiones cruzadas y reservar una prueba final separada.
+**Configuración elegida:** `C=1`, `class_weight=balanced`, `solver=lbfgs`.  
+F1: **0.7552**  
+Accuracy: **0.8045**, cerca del 80 % de aciertos  
+ROC-AUC: **0.8462**
+
+El F1 de la base fue 0.7244. Al usar `balanced`, el modelo encontró a más sobrevivientes, aunque también cometió más errores al decir que alguien sobrevivió. Identificó correctamente a 54 de los 69 sobrevivientes.
+
+El parámetro que más cambió los resultados fue `C`. En esas pruebas, el F1 fue de 0.6286 a 0.7344. Con `C=0.01`, el modelo tuvo más dificultad para reconocer a los sobrevivientes. Cambiar a `liblinear` no mejoró el F1 ni la accuracy. `C=10` tuvo la mayor accuracy, pero elegí `balanced` por su mejor F1.
+
+La repetición de la base dio los mismos resultados. También corregí el cálculo usado para limitar los valores altos de `Fare`, que es el precio del boleto. Ahora se calcula solo con los datos de entrenamiento.
+
+Una limitación es que usé pocos datos y una sola división para comparar los modelos. Por eso no puedo asegurar que el ganador funcione igual con datos nuevos. Después probaría varias divisiones y dejaría datos aparte para una evaluación final.

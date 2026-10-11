@@ -58,6 +58,7 @@ mlartifacts/
 # Corridas y modelos regenerables
 results/runs/
 results/best_model/
+output/pdf/
 
 # Temporales, registros y archivos comprimidos
 tmp/
@@ -73,3 +74,5 @@ logs/
 
 # Se conservan en Git: train.csv, results/selected_run/, evidence/,
 # resultados de comparación, informes Markdown y output/pdf/.
+
+TC5061_Experimentacion_MLFlow_HernandezAndres.md

@@ -1,25 +1,10 @@
-<!--
-ARCHIVO EDITABLE PARA LA ENTREGA
-
-- Reemplaza el espacio del repositorio con tu enlace real de GitHub.
-- Al exportar, usa Arial o Times New Roman, tamaño 11 e interlineado 1.5.
-- Mantén el análisis en una cuartilla y el contenido escrito en máximo dos,
-  sin contar las capturas. Revisa las páginas después de exportar.
-- Los bloques <div> separan páginas en los exportadores que admiten HTML.
-  Puedes quitarlos o moverlos según el formato que prefieras.
-- Las imágenes usan rutas relativas: conserva este archivo junto a evidence/.
-- Exporta este Markdown desde tu editor. build_report.py genera el informe
-  original a partir de los resultados JSON y no utiliza los cambios de este MD.
-- Nombre final: TC5061_Experimentacion_MLFlow_HernandezAndres.pdf
--->
-
 # Experimentación con MLflow
 
 **Alumno:** José Andrés Hernández Guerra  
 **Matrícula:** A01840564  
 **Materia:** TC5061  
 **Fecha:** 11 de octubre de 2026  
-**Repositorio de GitHub:** [Pega aquí el enlace de tu repositorio]
+**Repositorio de GitHub:** [Ver repositorio en GitHub](https://github.com/a01840564/Actividad-Individual-C-digo-de-experimentaci-n-base-con-MLFlow)
 
 ## Análisis de resultados
 
@@ -93,23 +78,7 @@ La última corrida repite la base. La usé para comprobar que los resultados fue
 
 Usé la semilla **42** para mantener la misma división de los datos y repetir el entrenamiento. La preparación de los datos se ajusta solo con la parte usada para entrenar.
 
-**Versiones utilizadas:**  
-Python: 3.14.7  
-MLflow: 3.17.0  
-scikit-learn: 1.9.1  
-NumPy: 2.5.4  
-pandas: 3.0.6  
-matplotlib: 3.11.2
-
-Las versiones están guardadas en `requirements.txt` y `requirements-lock.txt`. El README explica cómo instalarlas.
-
-MLflow guarda los parámetros, resultados, gráficas y el modelo de cada corrida. Git guarda las versiones del código. El modelo elegido quedó registrado con estos datos:
-
-Nombre: **TC5061-Titanic-RegresionLogistica**  
-Versión: **1**  
-Alias: `candidate`
-
-También comprobé que el modelo guardado diera las mismas predicciones al cargarlo de nuevo.
+Las versiones utilizadas y los datos del modelo guardado están en el anexo.
 
 <div style="page-break-after: always"></div>
 
@@ -147,3 +116,25 @@ Aquí comparé tres valores de `C`. Dejé los demás parámetros iguales para ve
 En **Artifacts** están las gráficas, los resultados y las predicciones. La matriz de confusión muestra los aciertos y los errores del modelo. El modelo guardado se encuentra en **Models**.
 
 ![Artefactos y matriz de confusión del ganador](evidence/03_mlflow_artifacts.jpg)
+
+<div style="page-break-after: always"></div>
+
+## Anexo. Versiones y modelo guardado
+
+**Versiones utilizadas:**  
+Python: 3.14.7  
+MLflow: 3.17.0  
+scikit-learn: 1.9.1  
+NumPy: 2.5.4  
+pandas: 3.0.6  
+matplotlib: 3.11.2
+
+Las versiones están guardadas en `requirements.txt` y `requirements-lock.txt`. El README explica cómo instalarlas.
+
+MLflow guarda los parámetros, resultados, gráficas y el modelo de cada corrida. Git guarda las versiones del código. El modelo elegido quedó registrado con estos datos:
+
+Nombre: **TC5061-Titanic-RegresionLogistica**  
+Versión: **1**  
+Alias: `candidate`
+
+También comprobé que el modelo guardado diera las mismas predicciones al cargarlo de nuevo.

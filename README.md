@@ -2,6 +2,8 @@
 
 José Andrés Hernández Guerra · A01840564
 
+[Repositorio en GitHub](https://github.com/a01840564/Actividad-Individual-C-digo-de-experimentaci-n-base-con-MLFlow)
+
 Baseline de regresión logística para predecir `Survived` en Titanic. El notebook se
 conserva solo para exploración; `train.py` carga los datos, divide, preprocesa,
 entrena, evalúa y registra cada corrida en MLflow.
@@ -101,14 +103,21 @@ afirmaciones de generalización.
 - `results/selected_run/`: evaluación, gráficas y procedencia del ganador.
 - `evidence/`: capturas reales de la interfaz de MLflow.
 - `output/pdf/`: documento para Canvas.
-- `TC5061_Experimentacion_MLFlow_HernandezAndres.md`: informe editable en un tono
-  más informal, con comandos y capturas. Puedes exportarlo a PDF desde tu editor
-  y ajustar Arial/Times New Roman 11, interlineado 1.5 y paginación. Conserva el
-  archivo junto a `evidence/` para que se carguen las imágenes.
-- `build_report.py`: regenera el PDF con resultados y capturas existentes.
+- `TC5061_Experimentacion_MLFlow_HernandezAndres.md`: informe con análisis,
+  comandos y capturas.
+- `build_report.py`: exporta el informe Markdown a PDF con Arial 11 e
+  interlineado 1.5.
 
-`build_report.py` usa los resultados JSON y no lee el informe Markdown editable;
-para conservar tus cambios de redacción, exporta ese Markdown directamente.
+Para generar el PDF después de editar el informe:
+
+```bash
+python build_report.py
+```
+
+El archivo se guarda en
+`output/pdf/TC5061_Experimentacion_MLFlow_HernandezAndres.pdf`. El generador usa
+las fuentes Arial de macOS. En otro sistema, indica `--font-dir` con una carpeta
+que contenga `Arial.ttf` y `Arial Bold.ttf`.
 
 El almacenamiento local de MLflow (`mlflow.db`, `mlruns/`) y `.venv/` se excluye
 de Git: contiene rutas locales y datos regenerables. Los resultados y capturas
@@ -122,33 +131,6 @@ configuración local, variables de entorno, claves, logs, temporales y bases de
 datos locales. Se conservan el dataset, las evidencias, los resultados de la
 comparación y los documentos de entrega. Las plantillas `.env.example` y
 `.env.sample` pueden incluirse si se necesitan.
-
-### Publicación pendiente
-
-1. Crea en GitHub un repositorio vacío accesible para el profesor.
-2. Ejecuta los siguientes comandos sustituyendo la URL:
-
-```bash
-git remote add origin https://github.com/TU_USUARIO/TC5061-Experimentacion-MLFlow.git
-git push -u origin main
-```
-
-3. Incorpora el enlace real al PDF y regénéralo:
-
-```bash
-python build_report.py --repo-url https://github.com/TU_USUARIO/TC5061-Experimentacion-MLFlow
-git add output/pdf
-git commit -m "Incluir enlace del repositorio en la entrega"
-git push
-```
-
-4. Comprueba el acceso del profesor y sube
-`output/pdf/TC5061_Experimentacion_MLFlow_HernandezAndres.pdf` a Canvas.
-
-El PDF sin `--repo-url` indica explícitamente que falta el enlace y debe
-regenerarse antes de entregar. Ningún enlace se inventa.
-El generador usa Arial de macOS; en otro sistema, indica `--font-dir` con una
-carpeta que contenga `Arial.ttf` y `Arial Bold.ttf`.
 
 Referencias técnicas: [MLflow sklearn](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.sklearn.html)
 y [LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html).
