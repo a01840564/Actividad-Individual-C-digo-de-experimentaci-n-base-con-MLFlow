@@ -81,6 +81,7 @@ def load_data(path):
         raise ValueError("Survived debe contener ambas clases 0 y 1, sin nulos.")
     if data["PassengerId"].isna().any() or data["PassengerId"].duplicated().any():
         raise ValueError("PassengerId debe ser único y no nulo.")
+    data[NUMERIC] = data[NUMERIC].astype(float)
     return data.drop_duplicates()
 
 
@@ -126,7 +127,7 @@ def provenance(data_path):
             "source_sha256": hashes, "git_commit": commit, "git_dirty": dirty,
             "python": platform.python_version(), "platform": platform.platform(),
             "dependencies": {p: importlib.metadata.version(p)
-                             for p in ["mlflow", "scikit-learn", "numpy", "pandas", "matplotlib"]}}
+                             for p in ["mlflow", "scikit-learn", "numpy", "pandas", "matplotlib", "skops", "scipy"]}}
 
 
 def save_artifacts(directory, model, data, X_train, X_test, y_test,
@@ -195,6 +196,7 @@ def main():
         info = mlflow.sklearn.log_model(
             model, name="model", signature=infer_signature(example, model.predict(example)),
             input_example=example, code_paths=[str(ROOT / "preprocessing.py")],
+            serialization_format="skops", skops_trusted_types=["numpy.dtype", "preprocessing.FareCapper"],
             pip_requirements=[f"{p}=={v}" for p, v in manifest["dependencies"].items()])
         mlflow.set_tag("model_uri", info.model_uri)
         manifest.update({"run_id": run.info.run_id, "run_name": args.run_name,
