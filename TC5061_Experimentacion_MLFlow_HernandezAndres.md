@@ -8,7 +8,7 @@ ARCHIVO EDITABLE PARA LA ENTREGA
 - Los bloques <div> separan páginas en los exportadores que admiten HTML.
   Puedes quitarlos o moverlos según el formato que prefieras.
 - Las imágenes usan rutas relativas: conserva este archivo junto a evidence/.
-- Exporta este Markdown desde tu editor; build_report.py genera el informe
+- Exporta este Markdown desde tu editor. build_report.py genera el informe
   original a partir de los resultados JSON y no utiliza los cambios de este MD.
 - Nombre final: TC5061_Experimentacion_MLFlow_HernandezAndres.pdf
 -->
@@ -23,19 +23,33 @@ ARCHIVO EDITABLE PARA LA ENTREGA
 
 ## Análisis de resultados
 
-En esta actividad pasé el modelo base de Titanic del notebook a un script de Python. La idea fue poder cambiar los parámetros desde la terminal y guardar en MLflow qué configuración usé y qué resultados dio. Conservé la regresión logística y las siete variables del modelo anterior. Trabajé con 891 pasajeros: 712 para entrenamiento y 179 para evaluación, siempre con la misma división y la semilla 42. En total hice seis configuraciones y una repetición de la base.
+En esta actividad pasé el modelo de Titanic del notebook a un archivo de Python. Así puedo cambiar sus parámetros desde la terminal y guardar los resultados en MLflow. Conservé la regresión logística del trabajo anterior. Probé seis configuraciones y repetí la base para revisar que diera el mismo resultado.
 
-Para elegir el modelo me enfoqué en F1 de los sobrevivientes, porque hay más pasajeros que no sobrevivieron y la accuracy por sí sola no cuenta toda la historia. La mejor configuración para ese criterio fue `C=1`, `class_weight=balanced` y `solver=lbfgs`, con F1 de **0.7552**, accuracy de **0.8045** y ROC-AUC de **0.8462**. Frente a la base, el recall subió de 0.6667 a 0.7826, aunque la precision bajó de 0.7931 a 0.7297. Es decir, detectó a más sobrevivientes, pero también marcó como sobrevivientes a más personas que no lo fueron. En la matriz de confusión identificó correctamente a 54 de los 69 sobrevivientes; tuvo 20 falsos positivos y 15 falsos negativos.
+**Datos utilizados:**  
+Total de pasajeros: 891  
+Para entrenar: 712  
+Para evaluar: 179
 
-El parámetro que más movió el F1 en las pruebas fue `C`: entre los valores probados, pasó de 0.6286 a 0.7344. Con `C=0.01`, la regularización fue más fuerte y el modelo dejó pasar a más sobrevivientes. Usar `balanced` mejoró el F1 de la base en 0.0308, mientras que cambiar a `liblinear` no cambió F1 ni accuracy. También vi que no hay una configuración que gane en todo: `C=10` tuvo la mayor accuracy (0.8101) y `C=0.1` el mayor ROC-AUC (0.8469).
+Elegí el modelo con el mejor F1 porque me interesaba identificar bien a los sobrevivientes. No me basé solo en el porcentaje de aciertos, ya que en los datos hay más personas que no sobrevivieron.
 
-La repetición de la base dio las mismas métricas y predicciones. Además, corregí el recorte de `Fare` para calcular su percentil solo con entrenamiento. Lo que todavía limita estos resultados es que usé un dataset pequeño y una sola división para comparar y elegir al ganador. Por eso no puedo asegurar que se comporte igual con datos nuevos. Como siguiente paso, probaría validación cruzada y dejaría un conjunto aparte para la evaluación final.
+**Configuración elegida:** `C=1`, `class_weight=balanced`, `solver=lbfgs`.  
+F1: **0.7552**  
+Accuracy: **0.8045**, cerca del 80 % de aciertos  
+ROC-AUC: **0.8462**
 
-<div style="page-break-after: always;"></div>
+El F1 de la base fue 0.7244. Al usar `balanced`, el modelo encontró a más sobrevivientes, aunque también cometió más errores al decir que alguien sobrevivió. Identificó correctamente a 54 de los 69 sobrevivientes.
+
+El parámetro que más cambió los resultados fue `C`. En esas pruebas, el F1 fue de 0.6286 a 0.7344. Con `C=0.01`, el modelo tuvo más dificultad para reconocer a los sobrevivientes. Cambiar a `liblinear` no mejoró el F1 ni la accuracy. `C=10` tuvo la mayor accuracy, pero elegí `balanced` por su mejor F1.
+
+La repetición de la base dio los mismos resultados. También corregí el cálculo usado para limitar los valores altos de `Fare`, que es el precio del boleto. Ahora se calcula solo con los datos de entrenamiento.
+
+Una limitación es que usé pocos datos y una sola división para comparar los modelos. Por eso no puedo asegurar que el ganador funcione igual con datos nuevos. Después probaría varias divisiones y dejaría datos aparte para una evaluación final.
+
+<div style="page-break-after: always"></div>
 
 ## Cómo ejecutar el proyecto
 
-El notebook quedó solo para explorar los datos. El entrenamiento, el preprocesamiento y la evaluación ahora se ejecutan desde `train.py`. Los comandos se corren desde la carpeta del proyecto, con el entorno de Python activado.
+Dejé el notebook para revisar los datos. El archivo `train.py` prepara los datos, entrena el modelo y calcula sus resultados. Los comandos se escriben desde la carpeta del proyecto, con el entorno de Python activado.
 
 Para repetir las siete corridas:
 
@@ -55,7 +69,11 @@ También se puede ejecutar `python train.py` sin argumentos para entrenar la bas
 mlflow ui --backend-store-uri sqlite:///mlflow.db --host 127.0.0.1 --port 5000
 ```
 
-Después se abre `http://127.0.0.1:5000` y se selecciona el experimento **TC5061-Titanic-Experimentacion-Logistica**. Ahí se pueden seleccionar las corridas y usar **Compare** para revisar sus diferencias.
+Después se abre esta dirección en el navegador:
+
+`http://127.0.0.1:5000`
+
+El experimento se llama **TC5061-Titanic-Experimentacion-Logistica**. Para comparar los resultados, se seleccionan las corridas y se presiona **Compare**.
 
 ## Resultados de las corridas
 
@@ -69,46 +87,63 @@ Después se abre `http://127.0.0.1:5000` y se selecciona el experimento **TC5061
 | 06_liblinear | 1 | none | liblinear | 0.8045 | 0.7244 | 0.8432 |
 | 07_réplica_base | 1 | none | lbfgs | 0.8045 | 0.7244 | 0.8431 |
 
-La réplica se usó para comprobar que los resultados se repiten; no se contó como una configuración adicional para elegir al ganador.
+La última corrida repite la base. La usé para comprobar que los resultados fueran iguales.
 
-## Semilla, dependencias y registro
+## Cómo repetir los resultados
 
-Usé la semilla **42** en Python, NumPy, la división de los datos y el clasificador. También fijé el cálculo numérico a un hilo. La imputación, el escalado, la codificación de categorías y el recorte de `Fare` se ajustan con los datos de entrenamiento.
+Usé la semilla **42** para mantener la misma división de los datos y repetir el entrenamiento. La preparación de los datos se ajusta solo con la parte usada para entrenar.
 
-El entorno utilizado fue Python **3.14.7**, MLflow **3.17.0**, scikit-learn **1.9.1**, NumPy **2.5.4**, pandas **3.0.6** y matplotlib **3.11.2**. Las versiones están en `requirements.txt` y `requirements-lock.txt`; el README explica cómo instalarlas.
+**Versiones utilizadas:**  
+Python: 3.14.7  
+MLflow: 3.17.0  
+scikit-learn: 1.9.1  
+NumPy: 2.5.4  
+pandas: 3.0.6  
+matplotlib: 3.11.2
 
-Cada corrida guarda parámetros, métricas, gráficas, predicciones y el pipeline completo. También queda registrada la versión del código en Git y la huella del dataset. El modelo elegido se registró como **TC5061-Titanic-RegresionLogistica**, versión **1**, con el alias `candidate`. Se comprobó que al cargarlo de nuevo conserva las predicciones.
+Las versiones están guardadas en `requirements.txt` y `requirements-lock.txt`. El README explica cómo instalarlas.
 
-<div style="page-break-after: always;"></div>
+MLflow guarda los parámetros, resultados, gráficas y el modelo de cada corrida. Git guarda las versiones del código. El modelo elegido quedó registrado con estos datos:
+
+Nombre: **TC5061-Titanic-RegresionLogistica**  
+Versión: **1**  
+Alias: `candidate`
+
+También comprobé que el modelo guardado diera las mismas predicciones al cargarlo de nuevo.
+
+<div style="page-break-after: always"></div>
 
 ## Evidencias de MLflow
 
 ### 1. Tabla de las siete corridas
 
-En esta captura se ven las corridas del mismo experimento y sus métricas de evaluación.
+Aquí se ven las siete corridas y sus resultados.
 
 ![Tabla de siete corridas en MLflow](evidence/01_mlflow_runs.jpg)
 
-<div style="page-break-after: always;"></div>
+<div style="page-break-after: always"></div>
 
 ### 2. Vista de comparación
 
-Seleccioné las siete corridas en **Compare Runs**. Esta parte de la vista muestra la réplica de la base, el cambio de solver y la configuración con balanceo de clases, junto con sus parámetros y métricas.
+Seleccioné las siete corridas en **Compare Runs**. En esta parte se ven la repetición de la base, la prueba con `liblinear` y la prueba con `balanced`.
 
 ![Comparación de corridas en MLflow](evidence/02_mlflow_compare.jpg)
 
-<div style="page-break-after: always;"></div>
+<div style="page-break-after: always"></div>
 
 ### 3. Comparación de los valores de C
 
-También comparé `C=10`, `C=0.1` y `C=0.01`, manteniendo los demás parámetros. Aquí se ve cómo cambia el F1 al modificar la regularización.
+Aquí comparé tres valores de `C`. Dejé los demás parámetros iguales para ver qué tanto cambiaban los resultados.
 
 ![Comparación de los valores de C](evidence/02b_mlflow_compare_remaining.jpg)
 
-<div style="page-break-after: always;"></div>
+<div style="page-break-after: always"></div>
 
 ### 4. Detalle de la corrida y sus artefactos
 
-La corrida ganadora fue **05_balanced**, con ID `b8cb39f305004bf1a1df0c6a5b8fed1f`. En **Artifacts** quedaron la matriz de confusión, las métricas, las predicciones y los archivos que documentan cómo se obtuvo el resultado. El pipeline entrenado está disponible en **Models**.
+**Corrida elegida:** `05_balanced`  
+**ID:** `b8cb39f305004bf1a1df0c6a5b8fed1f`
+
+En **Artifacts** están las gráficas, los resultados y las predicciones. La matriz de confusión muestra los aciertos y los errores del modelo. El modelo guardado se encuentra en **Models**.
 
 ![Artefactos y matriz de confusión del ganador](evidence/03_mlflow_artifacts.jpg)
