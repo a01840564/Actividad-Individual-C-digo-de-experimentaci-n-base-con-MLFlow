@@ -1,18 +1,17 @@
-# TC5061 - Experimentación reproducible con MLflow
+# TC5061 - Experimentación con MLflow
 
 José Andrés Hernández Guerra · A01840564
 
 [Repositorio en GitHub](https://github.com/a01840564/Actividad-Individual-C-digo-de-experimentaci-n-base-con-MLFlow)
 
-Baseline de regresión logística para predecir `Survived` en Titanic. El notebook se
-conserva solo para exploración; `train.py` carga los datos, divide, preprocesa,
-entrena, evalúa y registra cada corrida en MLflow.
+Regresión logística para predecir la supervivencia en Titanic. El notebook se
+conserva para explorar los datos. El entrenamiento se ejecuta desde `train.py`.
 
 ## Instalación
 
-Validado con Python **3.14.7** en macOS arm64. Para reproducir el entorno exacto,
-usa la misma versión de Python y `requirements-lock.txt`. `requirements.txt`
-contiene las versiones directas utilizadas, incluidas las herramientas del PDF.
+Entorno utilizado: Python 3.14.7 en macOS arm64. Ejecuta los comandos desde la
+carpeta del proyecto. Las versiones están en `requirements.txt` y el entorno
+completo de experimentación en `requirements-lock.txt`.
 
 ```bash
 python3 -m venv .venv
@@ -20,117 +19,69 @@ source .venv/bin/activate
 python -m pip install -r requirements-lock.txt
 ```
 
-En Windows, activa con `.venv\Scripts\activate`. Ejecuta los comandos desde la
-raíz del repositorio. `train.csv` está incluido: 891 filas y 12 columnas, dataset
-[Titanic de Kaggle](https://www.kaggle.com/competitions/titanic/data).
+En Windows, activa el entorno con `.venv\Scripts\activate`.
 
 ## Entrenamiento
 
-Sin argumentos utiliza la configuración base:
+Para usar los valores por defecto:
 
 ```bash
 python train.py
 ```
 
-Ejemplo con parámetros explícitos:
+Para cambiar los parámetros:
 
 ```bash
 python train.py --C 1.0 --class-weight balanced --solver lbfgs --seed 42 --max-iter 1000 --run-name prueba_balanced
 ```
 
-`python train.py --help` muestra todos los argumentos. Hiperparámetros principales:
-`--C` (inverso de la regularización L2), `--class-weight` (`none`/`balanced`) y
-`--solver` (`lbfgs`/`liblinear`); también `--max-iter`. Se parametrizan la semilla,
-el tamaño de prueba, el percentil de Fare, las rutas y el nombre del experimento.
+`--C`, `--class-weight`, `--solver` y `--max-iter` controlan el modelo.
+`--seed` fija la semilla. `python train.py --help` muestra todos los argumentos.
 
-Cada corrida registra parámetros, accuracy, F1, ROC-AUC, precision y recall;
-matriz de confusión, curva ROC, métricas JSON, predicciones y división de datos;
-código fuente, dependencias, hashes SHA-256, commit y estado de Git. El pipeline
-completo se guarda con firma y ejemplo de entrada mediante
-`mlflow.sklearn.log_model`.
-
-## Siete corridas y comparación
+Para repetir las seis configuraciones y la réplica de la base:
 
 ```bash
 python run_experiments.py
+```
+
+## Comparación en MLflow
+
+```bash
 mlflow ui --backend-store-uri sqlite:///mlflow.db --host 127.0.0.1 --port 5000
 ```
 
-Abre <http://127.0.0.1:5000>, elige
-`TC5061-Titanic-Experimentacion-Logistica`, muestra las columnas `C`,
-`class_weight`, `solver`, `f1_test`, `accuracy_test` y `roc_auc_test`, selecciona
-las corridas y pulsa **Compare**. En una corrida, abre **Artifacts** para las
-gráficas, archivos de evaluación y código; el pipeline está en **Models**.
+Abre <http://127.0.0.1:5000> y selecciona
+`TC5061-Titanic-Experimentacion-Logistica`. Selecciona las corridas y presiona
+**Compare**. En **Artifacts** están las gráficas, métricas y predicciones.
+El modelo completo está en **Models**.
 
-El ejecutor prueba seis configuraciones y una réplica de la base, con semilla 42
-y división estratificada 80/20 en todas. Las variantes cambian un hiperparámetro
-a la vez. La selección usa **F1 de la clase sobreviviente**; desempata con
-ROC-AUC y nombre de corrida. El modelo elegido se registra como
-`TC5061-Titanic-RegresionLogistica`, con versión y alias `candidate`.
-Cada nueva ejecución añade siete corridas y una versión; no borra las anteriores.
+Cada corrida registra sus parámetros, accuracy, F1, ROC-AUC, precision y recall.
+También guarda el código, las dependencias y la versión de Git. El ganador se
+elige por F1 y se registra como `TC5061-Titanic-RegresionLogistica`, con el alias
+`candidate`. Cada ejecución agrega siete corridas y una versión del modelo.
 
-El ejecutor verifica igualdad exacta de las cinco métricas, predicciones y
-partición entre base y réplica; recarga el modelo guardado y compara predicciones;
-verifica que el recorte de Fare se aprendió solo con entrenamiento.
+## Reproducibilidad
 
-En la entrega preparada se seleccionó `C=1`, `class_weight=balanced`,
-`solver=lbfgs`: F1 **0.7552**, accuracy **0.8045**, ROC-AUC **0.8462**. Entre los
-rangos probados, `C` produjo el mayor cambio de F1. El análisis completo y sus
-limitaciones están en `results/analysis.md` y en el PDF.
+Todas las corridas usan la semilla 42 y la misma división estratificada 80/20.
+La preparación de los datos se ajusta solo con entrenamiento. El ejecutor
+comprueba que la base y su réplica tengan las mismas métricas y predicciones,
+y que el modelo guardado conserve sus predicciones al cargarlo de nuevo.
 
-## Reproducibilidad y metodología
+El mejor F1 registrado fue **0.7552**, con `C=1`, `class_weight=balanced` y
+`solver=lbfgs`. Se usó una sola división para comparar y elegir al ganador.
+Hace falta una evaluación con datos aparte para comprobar su desempeño en
+casos nuevos.
 
-La semilla fija `random`, NumPy, la partición estratificada y el clasificador.
-Los cálculos numéricos usan un hilo. La imputación, escalado, one-hot y percentil
-de Fare se ajustan dentro del pipeline con el entrenamiento. En el notebook
-anterior el percentil se calculaba con todo el dataset; se corrigió esa filtración.
-Se preservan las siete variables predictoras del baseline y el umbral 0.5.
+## Archivos de la actividad
 
-La igualdad se verificó en el entorno documentado; versiones o plataformas
-distintas pueden producir pequeñas diferencias numéricas. F1 privilegia el
-equilibrio entre precision y recall de sobrevivientes. Seleccionar con esta
-misma partición hace que sus métricas no sean una estimación independiente del
-modelo ganador: se requiere validación cruzada y una prueba final separada para
-afirmaciones de generalización.
+- `train.py` y `preprocessing.py`: entrenamiento y preparación de los datos.
+- `run_experiments.py`: ejecución y comparación de las configuraciones.
+- `train.csv`: dataset [Titanic de Kaggle](https://www.kaggle.com/competitions/titanic/data).
+- Notebook: exploración de los datos.
+- `results/`: comparación, comandos, comprobación de reproducibilidad y evaluación del ganador.
+- `evidence/`: capturas de MLflow.
+- Informe Markdown y `output/pdf/`: análisis y documento de entrega.
 
-## Resultados y entrega
-
-- `results/comparison.csv`: métricas reales y parámetros de las siete corridas.
-- `results/commands.txt`: comandos exactos ejecutados.
-- `results/experiment_summary.json`: IDs, selección y versión del modelo.
-- `results/reproducibility.json`: evidencia de reproducibilidad y recarga.
-- `results/default_execution_verified.json`: ejecución real sin argumentos.
-- `results/selected_run/`: evaluación, gráficas y procedencia del ganador.
-- `evidence/`: capturas reales de la interfaz de MLflow.
-- `output/pdf/`: documento para Canvas.
-- `TC5061_Experimentacion_MLFlow_HernandezAndres.md`: informe con análisis,
-  comandos y capturas.
-- `build_report.py`: exporta el informe Markdown a PDF con Arial 11 e
-  interlineado 1.5.
-
-Para generar el PDF después de editar el informe:
-
-```bash
-python build_report.py
-```
-
-El archivo se guarda en
-`output/pdf/TC5061_Experimentacion_MLFlow_HernandezAndres.pdf`. El generador usa
-las fuentes Arial de macOS. En otro sistema, indica `--font-dir` con una carpeta
-que contenga `Arial.ttf` y `Arial Bold.ttf`.
-
-El almacenamiento local de MLflow (`mlflow.db`, `mlruns/`) y `.venv/` se excluye
-de Git: contiene rutas locales y datos regenerables. Los resultados y capturas
-sí se publican. Después de clonar, ejecuta `python run_experiments.py` para
-recrear corridas y modelos en una nueva instalación de MLflow; los nuevos IDs
-serán diferentes. Para explorar el notebook, abre Jupyter con este entorno
-(instala Jupyter por separado si lo necesitas).
-
-El `.gitignore` también excluye otros entornos de Python, cachés, archivos de
-configuración local, variables de entorno, claves, logs, temporales y bases de
-datos locales. Se conservan el dataset, las evidencias, los resultados de la
-comparación y los documentos de entrega. Las plantillas `.env.example` y
-`.env.sample` pueden incluirse si se necesitan.
-
-Referencias técnicas: [MLflow sklearn](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.sklearn.html)
-y [LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html).
+El `.gitignore` excluye entornos de Python, cachés, credenciales y almacenamiento
+local de MLflow. Después de clonar, ejecuta `python run_experiments.py` para
+recrear las corridas y modelos. Los IDs nuevos serán distintos.

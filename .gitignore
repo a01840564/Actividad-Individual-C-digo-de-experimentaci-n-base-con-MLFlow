@@ -60,8 +60,6 @@ results/runs/
 results/best_model/
 output/pdf/
 
-build_report.py
-
 # Temporales, registros y archivos comprimidos
 tmp/
 temp/
