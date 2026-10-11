@@ -101,7 +101,14 @@ afirmaciones de generalización.
 - `results/selected_run/`: evaluación, gráficas y procedencia del ganador.
 - `evidence/`: capturas reales de la interfaz de MLflow.
 - `output/pdf/`: documento para Canvas.
+- `TC5061_Experimentacion_MLFlow_HernandezAndres.md`: informe editable en un tono
+  más informal, con comandos y capturas. Puedes exportarlo a PDF desde tu editor
+  y ajustar Arial/Times New Roman 11, interlineado 1.5 y paginación. Conserva el
+  archivo junto a `evidence/` para que se carguen las imágenes.
 - `build_report.py`: regenera el PDF con resultados y capturas existentes.
+
+`build_report.py` usa los resultados JSON y no lee el informe Markdown editable;
+para conservar tus cambios de redacción, exporta ese Markdown directamente.
 
 El almacenamiento local de MLflow (`mlflow.db`, `mlruns/`) y `.venv/` se excluye
 de Git: contiene rutas locales y datos regenerables. Los resultados y capturas
