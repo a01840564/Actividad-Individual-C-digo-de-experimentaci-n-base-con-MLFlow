@@ -117,6 +117,12 @@ recrear corridas y modelos en una nueva instalación de MLflow; los nuevos IDs
 serán diferentes. Para explorar el notebook, abre Jupyter con este entorno
 (instala Jupyter por separado si lo necesitas).
 
+El `.gitignore` también excluye otros entornos de Python, cachés, archivos de
+configuración local, variables de entorno, claves, logs, temporales y bases de
+datos locales. Se conservan el dataset, las evidencias, los resultados de la
+comparación y los documentos de entrega. Las plantillas `.env.example` y
+`.env.sample` pueden incluirse si se necesitan.
+
 ### Publicación pendiente
 
 1. Crea en GitHub un repositorio vacío accesible para el profesor.

@@ -1,11 +1,75 @@
+# Entornos de Python
 .venv/
+venv/
+env/
+.env/
+.virtualenv/
+
+# Cachés y archivos generados por Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Configuración local y credenciales
+.env
+.env.*
+!.env.example
+!.env.sample
+.aws/
+*.pem
+*.key
+.idea/
+.vscode/
+
+# Archivos del sistema y de Jupyter
 .DS_Store
+._*
+Thumbs.db
+Desktop.ini
 .ipynb_checkpoints/
+
+# Almacenamiento local de MLflow
 mlflow.db*
 mlruns/
-tmp/
+mlartifacts/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Corridas y modelos regenerables
 results/runs/
 results/best_model/
+
+# Temporales, registros y archivos comprimidos
+tmp/
+temp/
+logs/
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
 *.zip
+
+# Se conservan en Git: train.csv, results/selected_run/, evidence/,
+# resultados de comparación, informes Markdown y output/pdf/.
