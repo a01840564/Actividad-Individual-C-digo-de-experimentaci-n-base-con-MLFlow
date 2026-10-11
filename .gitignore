@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+mlflow.db*
+mlruns/
+tmp/
+results/runs/
+results/best_model/
+*.zip
